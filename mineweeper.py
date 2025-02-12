@@ -43,9 +43,7 @@ def setup_grid():
                 'status': 'closed',
                 'mine' : True if index in mine_list else False
             }
-            print(grid[i][j]['mine'])
             index += 1
-
 
     return grid
 
