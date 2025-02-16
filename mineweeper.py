@@ -5,7 +5,7 @@ import random
 HOME_WIDTH = 300
 HOME_HEIGHT = 0
 BACKGROUND_COLOR = "#FFFFFF"
-SPACE_SIZE = 30
+SPACE_SIZE = 40
 CLOSED_COLOR1 = "#dbfaac"
 CLOSED_COLOR2 = "#aced4a"
 MINE_COLOR = "#ff0000"
@@ -162,14 +162,46 @@ class MainHome:
 
         return mine_list
     
-    def on_left_click(self, event: Event):
-        x = int(event.x / SPACE_SIZE) * SPACE_SIZE
-        y = int(event.y / SPACE_SIZE) * SPACE_SIZE
 
-        if self.grid[int(y/ SPACE_SIZE)][int(x/ SPACE_SIZE)]['mine'] == True:
-            self.game_canvas.create_rectangle(x  , y, x + SPACE_SIZE, y + + SPACE_SIZE, fill= MINE_COLOR)
+    def on_left_click(self, event: Event):
+        grid_x = int(event.x / SPACE_SIZE)
+        grid_y = int(event.y / SPACE_SIZE)
+    
+        canvas_x = grid_x * SPACE_SIZE
+        canvas_y = grid_y * SPACE_SIZE
+    
+        if self.grid[grid_y][grid_x]['mine']:
+            self.game_over()
+            self.game_canvas.create_rectangle(
+                canvas_x, 
+                canvas_y, 
+                canvas_x + SPACE_SIZE, 
+                canvas_y + SPACE_SIZE, 
+                fill=MINE_COLOR
+            )
         else:
-            self.game_canvas.create_rectangle(x  , y, x + SPACE_SIZE, y + + SPACE_SIZE, fill= "#FFFFFF")
+            self.game_canvas.create_rectangle(
+                canvas_x, 
+                canvas_y, 
+                canvas_x + SPACE_SIZE, 
+                canvas_y + SPACE_SIZE, 
+                fill="#FFFFFF"
+            )
+
+
+    def game_over(self):
+        x, y = self.get_xy()
+       
+        for i in range(y):
+            for j in range(x):
+                if self.grid[i][j]['mine'] == True:
+                    self.game_canvas.create_rectangle(j * SPACE_SIZE, i * SPACE_SIZE, (j + 1) * SPACE_SIZE,  (i + 1) * SPACE_SIZE, fill= "#fcc2c2")
+
+        if msgbox.askyesno("예/아니오", "지뢰찾기를 다시 하겟습니까?") == True:
+            self.game_restart()
+
+
+                
 
 
 if __name__ == "__main__":
